@@ -2,7 +2,7 @@ import { extendTheme, ThemeOverride } from "@chakra-ui/react";
 import { lighten, darken } from "polished";
 
 const colorPrimary = "#021a27";
-const colorSecondary = "#16ade5";
+const colorSecondary = "#474747";
 
 export const config: ThemeOverride = {
   initialColorMode: "light",
@@ -17,7 +17,7 @@ export const config: ThemeOverride = {
         scrollBehavior: "smooth",
       },
       body: {
-        backgroundColor: "#000",
+        backgroundColor: "secondary.600",
       },
     },
   },
@@ -50,12 +50,12 @@ export const config: ThemeOverride = {
   components: {
     Text: {
       baseStyle: {
-        color: "gray.500",
+        color: "gray.100",
       },
     },
     Heading: {
       baseStyle: {
-        color: "primary.500",
+        color: "primary.100",
         fontWeight: "normal",
       },
     },

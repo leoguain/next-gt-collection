@@ -17,11 +17,15 @@ model Brands {
 }
 
 model Cars {
-  id      String @id @default(cuid())
-  model   String
-  year    String
-  price   Float
-  brandId String
+  id         String @id @default(cuid())
+  model      String
+  year       String
+  price      Int
+  brandId    String
+  drivetrain String
+  power      Int
+  weight     Int
+  aspiration String
 
-  brand Brands @relation(fields: [brandId], references: [id])
+  brand Brands @relation(fields: [brandId], references: [id], onDelete: Cascade)
 }

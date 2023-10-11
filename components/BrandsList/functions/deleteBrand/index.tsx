@@ -1,10 +1,27 @@
 import Axios from "axios";
 import { BrandProps } from "types/global";
 
+interface ImageProps {
+  id: string;
+  type: string;
+}
+
 export async function deleteBrand({ id, name }: BrandProps) {
-  const params = { id: id };
+  const params = { id: id, type: "brands" };
 
   try {
+    const delImage = await Axios.delete<ImageProps>("/api/images", {
+      data: params,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+
+    delImage;
+
+    console.log(params);
+
     const { data, status } = await Axios.delete<BrandProps>("/api/brands", {
       data: params,
       headers: {
@@ -14,7 +31,6 @@ export async function deleteBrand({ id, name }: BrandProps) {
     });
 
     console.log(JSON.stringify(data, null, 4));
-
     console.log(status);
 
     return data;

@@ -64,8 +64,8 @@ export const DeleteBrandDialog = ({ id, name }: BrandProps) => {
                 ml={3}
                 onClick={() => {
                   deleteBrand({ id, name });
-                  onClose();
-                  window.location.reload();
+                  /*onClose();
+                  window.location.reload();*/
                 }}
               >
                 Excluir

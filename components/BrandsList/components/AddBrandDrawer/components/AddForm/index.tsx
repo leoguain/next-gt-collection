@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent, useState } from "react";
 
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -10,20 +10,52 @@ import {
   Input,
   FormControl,
   useToast,
-  Box,
+  Image,
+  Flex,
 } from "@chakra-ui/react";
 
 type Inputs = {
   id: string;
   name: string;
-  onCancel: any;
+  logo: string;
 };
 
-import { addBrand } from "components/BrandsList/functions/addBrand";
-import { FieldLabel } from "./componentes/FieldLabel";
+interface EventsProps {
+  onCancel: any;
+}
 
-export const AddForm = ({ id, name, onCancel }: Inputs) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+import { addBrand } from "components/BrandsList/functions/addBrand";
+import { FieldLabel } from "components/FormComponents/FieldLabel";
+import axios from "axios";
+
+import { useBrandsList } from "../../../../../BrandsList";
+
+interface ImageProps {
+  buffer: ArrayBuffer;
+  type: string;
+  brandId: string;
+}
+
+export const AddForm = ({ onCancel }: EventsProps) => {
+  const { onClose } = useDisclosure();
+  const { setBrandsList } = useBrandsList();
+
+  const [image, setImage] = useState<File>();
+  const [previewImage, setPreviewImage] = useState<string>();
+
+  function handleSelectImages(event: ChangeEvent<HTMLInputElement>) {
+    if (!event.target.files) {
+      return;
+    }
+
+    const selectedImage = event.target.files[0] as File;
+
+    setImage(selectedImage);
+
+    const selectedImagePreview = URL.createObjectURL(selectedImage);
+
+    setPreviewImage(selectedImagePreview);
+  }
 
   const toast = useToast();
 
@@ -34,12 +66,22 @@ export const AddForm = ({ id, name, onCancel }: Inputs) => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    if (!image) return;
+
+    const buffer = Buffer.from(await image.arrayBuffer());
+
+    const result = await axios.post<ImageProps>("/api/images", {
+      brandId: data.id,
+      buffer: buffer,
+      type: "brands",
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
     addBrand({ ...data }).then(
       (result) => {
-        console.log("TESTE: ", result);
         onClose();
-        window.location.reload();
+        setBrandsList((state) => state.filter((item) => item.id === data.id));
       },
       (error) => {
         console.log("ERRO: ", error);
@@ -50,7 +92,7 @@ export const AddForm = ({ id, name, onCancel }: Inputs) => {
           status: "warning",
           duration: 9000,
           isClosable: true,
-          position: "bottom-left",
+          position: "bottom-right",
         });
       }
     );
@@ -64,12 +106,31 @@ export const AddForm = ({ id, name, onCancel }: Inputs) => {
     <Stack spacing={4}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl color={"#fff"}>
+          <FieldLabel text="Logo da marca:" />
+          <Flex align={"center"} flexDirection={"column"} gap={2}>
+            <Image
+              key={previewImage}
+              src={previewImage}
+              alt={previewImage}
+              w="150px"
+            />
+            <Input
+              onChange={handleSelectImages}
+              type="file"
+              accept="image/png"
+              border="none"
+              id="image[]"
+              fontSize={"sm"}
+              flexFlow={"wrap column"}
+              isRequired
+            />
+          </Flex>
+
           <FieldLabel text="Id da marca:" />
           <Input
             bg="#fff"
             color={"secondary.500"}
             id="brandId"
-            defaultValue={id}
             {...register("id", { required: true })}
           />
           {errors.name && <span>Este campo não pode ser vazio.</span>}
@@ -78,7 +139,6 @@ export const AddForm = ({ id, name, onCancel }: Inputs) => {
             bg="#fff"
             color={"secondary.500"}
             id="brandName"
-            defaultValue={name}
             {...register("name", { required: true })}
           />
           {errors.name && <span>Este campo não pode ser vazio.</span>}

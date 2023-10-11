@@ -5,7 +5,7 @@ import type { InferGetStaticPropsType, GetStaticProps } from "next";
 
 import { Page } from "components/Page";
 import { Content } from "components/Content";
-import { BrandsList } from "components/BrandsList";
+import { CarsList } from "components/CarsList";
 
 function Carros({
   pageTitle,
@@ -21,7 +21,7 @@ function Carros({
       <Page title={pageTitle} description={description}>
         <Content>
           <React.Fragment>
-            <BrandsList />
+            <CarsList />
           </React.Fragment>
         </Content>
       </Page>

@@ -17,7 +17,7 @@ export const config: ThemeOverride = {
         scrollBehavior: "smooth",
       },
       body: {
-        backgroundColor: "secondary.600",
+        backgroundColor: "secondary.700",
       },
     },
   },

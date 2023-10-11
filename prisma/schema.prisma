@@ -10,6 +10,21 @@ datasource db {
   url      = "file:./dev.db"
 }
 
+model Users {
+  id        String   @id @default(cuid())
+  name      String
+  nickname  String
+  email     String
+  password  String
+  birthDate String
+  country   String
+  state     String
+  createdAt DateTime @default(now())
+  level     Int      @default(1)
+  license   String   @default("B")
+  logged    Boolean  @default(false)
+}
+
 model Brands {
   id   String @id @default(cuid())
   name String
@@ -28,4 +43,12 @@ model Cars {
   aspiration String
 
   brand Brands @relation(fields: [brandId], references: [id], onDelete: Cascade)
+}
+
+model Tracks {
+  id        String @id @default(cuid())
+  name      String
+  shortName String
+  country   String
+  extension String
 }

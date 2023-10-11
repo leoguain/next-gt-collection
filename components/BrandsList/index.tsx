@@ -4,18 +4,29 @@ import Axios from "axios";
 
 import { Flex, Text } from "@chakra-ui/react";
 
-import { BrandsBox } from "./components/BrandBox";
+import { EditBrandsBox } from "./components/EditBrandBox";
 import { AddBrandDrawer } from "./components/AddBrandDrawer";
 import { BrandProps } from "types/global";
 
-export const BrandsList = () => {
+export const useBrandsList = () => {
   const [brandsList, setBrandsList] = useState<BrandProps[]>([]);
+
+  return {
+    brandsList,
+    setBrandsList,
+  };
+};
+
+export const BrandsList = () => {
+  const { brandsList, setBrandsList } = useBrandsList();
 
   useEffect(() => {
     const fetchBrands = async () => {
       const res = await Axios.get("/api/brands");
       setBrandsList(res.data.brands);
+      console.log("teste");
     };
+
     fetchBrands();
   }, []);
 
@@ -44,7 +55,7 @@ export const BrandsList = () => {
             valueA.name < valueB.name ? -1 : 1
           )
           .map((brand: { id: string; name: string }) => (
-            <BrandsBox key={brand.id} id={brand.id} name={brand.name} />
+            <EditBrandsBox key={brand.id} id={brand.id} name={brand.name} />
           ))}
       </Flex>
     </React.Fragment>

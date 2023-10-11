@@ -12,7 +12,7 @@ export const UpButton = () => {
   return (
     <Button
       rounded={4}
-      bg="secondary.500"
+      bg="secondary.800"
       color="#fff"
       cursor={"pointer"}
       onClick={goToTop}

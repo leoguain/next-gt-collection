@@ -1,25 +1,27 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
-import { BrandsProps } from "types/global";
-import { useState } from "react";
 
 export default async function getBrands(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const prisma = new PrismaClient();
-
   if (req.method === "GET") {
     try {
+      const prisma = new PrismaClient();
       const brands = await prisma.brands.findMany();
-      res.json({ brands });
+
+      prisma.$disconnect;
+
+      res.status(201).json({ brands });
     } catch (error) {
       res.status(201).json("No data found.");
       console.log(error);
     }
   } else if (req.method === "POST") {
     try {
+      const prisma = new PrismaClient();
+
       const findBrand = await prisma.brands.findUnique({
         where: {
           id: req.body.id,
@@ -38,8 +40,10 @@ export default async function getBrands(
           },
         });
 
+        prisma.$disconnect;
         res.status(201).json(newBrand);
       } else {
+        prisma.$disconnect;
         res.status(203).json("Esta montadora já foi cadastrada.");
       }
     } catch (error) {
@@ -47,6 +51,8 @@ export default async function getBrands(
     }
   } else if (req.method === "PUT") {
     try {
+      const prisma = new PrismaClient();
+
       const updateBrand = await prisma.brands.update({
         where: {
           id: req.body.id,
@@ -60,6 +66,8 @@ export default async function getBrands(
         },
       });
 
+      prisma.$disconnect;
+
       res.status(201).json(updateBrand);
     } catch (error) {
       res.json("No data is updated");
@@ -67,11 +75,15 @@ export default async function getBrands(
     }
   } else if (req.method === "DELETE") {
     try {
+      const prisma = new PrismaClient();
+
       const deleteBrand = await prisma.brands.delete({
         where: {
           id: req.body.id,
         },
       });
+
+      prisma.$disconnect;
 
       res.status(201).json(deleteBrand);
     } catch (error) {
@@ -82,24 +94,3 @@ export default async function getBrands(
     res.json("No data found");
   }
 }
-
-/*
-export default async function saveNewBrand(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  const prisma = new PrismaClient();
-
-  try {
-    const profile = await prisma.brands.create({
-      data: {
-        id: "mazda",
-        name: "Mazda",
-      },
-    });
-  } catch (error) {
-    console.log(error);
-  }
-  res.status(200).json({ name: "John Doe" });
-}
-*/

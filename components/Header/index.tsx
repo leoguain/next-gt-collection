@@ -1,9 +1,8 @@
 import React from "react";
 import { Flex, HStack, Image } from "@chakra-ui/react";
-
-import Link from "next/link";
 import { useHeader } from "./hooks/useHeader";
 import { MobileMenu } from "./components/MobileMenu";
+import { LoginBox } from "./components/LoginBox";
 
 export const Header = () => {
   const { menuItems } = useHeader();
@@ -25,6 +24,7 @@ export const Header = () => {
       boxShadow={"dark-lg"}
     >
       <MobileMenu items={menuItems} />
+      <LoginBox />
     </Flex>
   );
 };

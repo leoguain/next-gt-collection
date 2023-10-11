@@ -1,7 +1,4 @@
-import React, { ChangeEvent, FormEvent, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-
-import { FiPlus } from "react-icons/fi";
+import React, { useState } from "react";
 
 import {
   Flex,
@@ -10,22 +7,58 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerBody,
-  DrawerFooter,
   useDisclosure,
   Text,
-  Image,
 } from "@chakra-ui/react";
 
-import { BrandProps } from "types/global";
 import { AddForm } from "./components/AddForm";
 
 export const AddBrandDrawer = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  return (
+    <Flex>
+      <Button
+        bg="#fff"
+        color="secondary.300"
+        _hover={{ bg: "secondary.100", color: "#fff" }}
+        onClick={onOpen}
+        w={40}
+      >
+        + Nova Montadora
+      </Button>
+      <Drawer isOpen={isOpen} placement="right" onClose={onClose} size={"xs"}>
+        <DrawerContent bg={"secondary.600"}>
+          <DrawerHeader>
+            <Text color={"gray.300"} align={"center"}>
+              Adicionar nova montadora
+            </Text>
+          </DrawerHeader>
+          <DrawerBody>
+            <Flex
+              bg={"secondary.600"}
+              flexDirection={"column"}
+              w="100%"
+              mx="auto"
+              px={[4]}
+              py={4}
+              align="center"
+            >
+              <AddForm onCancel={onClose} />
+            </Flex>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    </Flex>
+  );
+};
+
+/*
   const [id, setId] = useState("");
   const [name, setName] = useState("");
-  const [images, setImages] = useState<File[]>([]);
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  
 
-  function handleSelectImages(event: ChangeEvent<HTMLInputElement>) {
+function handleSelectImages(event: ChangeEvent<HTMLInputElement>) {
     if (!event.target.files) {
       return;
     }
@@ -66,10 +99,8 @@ export const AddBrandDrawer = () => {
     }
     alert("Cadastro realizado com sucesso!");
   }
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const [file, setFile] = useState<File | undefined>();
+  
+const [file, setFile] = useState<File | undefined>();
   const [preview, setPreview] = useState<string | ArrayBuffer | null>(null);
 
   async function handleOnChange(e: React.FormEvent<HTMLInputElement>) {
@@ -89,39 +120,5 @@ export const AddBrandDrawer = () => {
 
     console.log(preview);
   }
-  return (
-    <Flex>
-      <Button
-        bg="#fff"
-        color="secondary.300"
-        _hover={{ bg: "secondary.100", color: "#fff" }}
-        onClick={onOpen}
-        w={40}
-      >
-        + Nova Montadora
-      </Button>
-      <Drawer isOpen={isOpen} placement="right" onClose={onClose} size={"xs"}>
-        <DrawerContent bg={"secondary.600"}>
-          <DrawerHeader>
-            <Text color={"gray.300"} align={"center"}>
-              Adicionar nova montadora
-            </Text>
-          </DrawerHeader>
-          <DrawerBody>
-            <Flex
-              bg={"secondary.600"}
-              flexDirection={"column"}
-              w="100%"
-              mx="auto"
-              px={[4]}
-              py={4}
-              align="center"
-            >
-              <AddForm id={id} name={name} onCancel={onClose} />
-            </Flex>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-    </Flex>
-  );
-};
+
+  */

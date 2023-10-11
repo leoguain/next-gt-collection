@@ -1,73 +1,94 @@
-import React from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
-import { Flex, Text, Image } from "@chakra-ui/react";
-import { BrandProps } from "components/BrandsList/types";
+import Axios from "axios";
 
-export const CarsList = ({ id, name }: BrandProps) => {
+import { Flex, Image } from "@chakra-ui/react";
+import { BrandProps } from "types/global";
+import { EditCarBox } from "./components/EditCarBox";
+import { AddCarBox } from "./components/AddCarBox";
+import { ListCarBox } from "./components/ListCarBox";
+
+export const CarsList = () => {
   const brandsFile = "/brands/";
 
+  const [brandsList, setBrandsList] = useState<BrandProps[]>([]);
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      const res = await Axios.get("/api/brands");
+      setBrandsList(res.data.brands);
+    };
+    fetchBrands();
+  }, []);
+
+  const [activeBrand, setActiveBrand] = useState(brandsList[0]);
+  const handleBrandClick = useCallback((brand: BrandProps) => {
+    setActiveBrand(brand);
+  }, []);
+
   return (
-    <Flex bg={"#474747"} flex={2} color={"#fff"} p={4}>
+    <Flex mt={16}>
       <Flex
-        flexDirection={"column"}
-        align={"center"}
-        justifyContent={"center"}
-        w={40}
+        bg={"secondary.800"}
+        gap={2}
+        flexFlow={"column"}
+        maxH={"xl"}
+        maxW={"2xs"}
+        overflowY={"auto"}
+        css={{
+          "&::-webkit-scrollbar": {
+            width: "14px",
+          },
+          "&::-webkit-scrollbar-track": {
+            backgroundColor: "#868686",
+            width: "10px",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "#4d4d4d",
+            borderRadius: "2px",
+          },
+        }}
       >
-        <Image alt="brands logo" src={brandsFile + id + ".png"} width="75px" />
+        {brandsList
+          .sort((valueA: BrandProps, valueB: BrandProps) =>
+            valueA.name < valueB.name ? -1 : 1
+          )
+          .map((brand: { id: string; name: string }) => (
+            <Flex
+              key={brand.id}
+              justifyContent={"left"}
+              gap={4}
+              align={"center"}
+              color={"secondary.100"}
+              p={4}
+              alignContent={"center"}
+              cursor={"pointer"}
+              _hover={{ bg: "secondary.600", color: "#fff" }}
+              onClick={() => {
+                handleBrandClick(brand);
+              }}
+            >
+              <Image
+                alt="brands logo"
+                src={brandsFile + brand.id + ".png"}
+                width="25px"
+              />
+              {brand.name}
+            </Flex>
+          ))}
+      </Flex>
+      <Flex align={"start"} flexFlow={"column"}>
+        {activeBrand && (
+          <React.Fragment>
+            <AddCarBox id={activeBrand.id} name={activeBrand.name} />
+            <ListCarBox id={activeBrand.id} name={activeBrand.name} />
+          </React.Fragment>
+        )}
       </Flex>
     </Flex>
   );
 };
 
 /*
-
-      <Flex
-        flexDirection={"column"}
-        align={"center"}
-        justifyContent={"center"}
-        w={40}
-      >
-        <Image alt="brands logo" src={brandsFile + id + ".png"} width="50px" />
-        <Text color={"gray.100"}>{name}</Text>
-        <Text color={"gray.100"}>{id}</Text>
-      </Flex>
-
-
-      
- {cars
-        .sort((a, b) => (a.model < b.model ? -1 : 1))
-        .map(({ id, model, year, price, brandId }) => (
-          <Flex key={id} gap={16}>
-            <Text align={"start"} w={64}>
-              {model}
-            </Text>
-            <Text align={"center"} w={12}>
-              {year}
-            </Text>
-            <Text align={"end"} w={24}>
-              {price}
-            </Text>
-            <Text align={"end"} w={24}>
-              {brandId}
-            </Text>
-          </Flex>
-        ))}
-
-
-
-        const LoadCars = async () => {
-  const prisma = new PrismaClient();
-  const listCars = await prisma.cars.findMany({
-    where: {
-      brandId: "alfa",
-    },
-    orderBy: {
-      model: "asc",
-    },
-  });
-
-  return { listCars };
-};
-
-        */
+<EditCarBox id={activeBrand.id} name={activeBrand.name} />
+*/

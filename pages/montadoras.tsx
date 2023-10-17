@@ -6,6 +6,7 @@ import type { InferGetStaticPropsType, GetStaticProps } from "next";
 import { Page } from "components/Page";
 import { Content } from "components/Content";
 import { BrandsList } from "components/BrandsList";
+import { BrandContextProvider } from "contexts/BrandsContext";
 
 function Montadoras({
   pageTitle,
@@ -20,9 +21,9 @@ function Montadoras({
 
       <Page title={pageTitle} description={description}>
         <Content>
-          <React.Fragment>
+          <BrandContextProvider>
             <BrandsList />
-          </React.Fragment>
+          </BrandContextProvider>
         </Content>
       </Page>
     </React.Fragment>

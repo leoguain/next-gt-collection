@@ -6,18 +6,18 @@ export type HeaderProps = {
 export type MenuProps = {
   items: MenuItemProps[];
 };
-
-export type SubMenuProps = {
-  subItems: SubItemProps[];
-};
-
 export type MenuItemProps = {
   id: string;
+  title: string;
   href: string;
   subItems: SubItemProps[];
 };
 
+export type SubMenuProps = {
+  subItems: SubItemProps[];
+};
 export type SubItemProps = {
   id: string;
+  title: string;
   href: string;
 };

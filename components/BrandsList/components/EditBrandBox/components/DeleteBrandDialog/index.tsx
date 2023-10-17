@@ -1,7 +1,7 @@
-import React from "react";
-
+import React, { useContext } from "react";
 import {
   Text,
+  Image,
   Button,
   AlertDialog,
   AlertDialogBody,
@@ -9,77 +9,103 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
+  Tooltip,
   useDisclosure,
+  Flex,
 } from "@chakra-ui/react";
+import { CloseIcon } from "@chakra-ui/icons";
+
+import { BrandContext } from "contexts/BrandsContext";
 
 import { BrandProps } from "types/global";
-import { deleteBrand } from "../../../../functions/deleteBrand";
-import { useBrandsList } from "../../../../../BrandsList";
+import { deleteBrand } from "backend/functions/brandFunctions";
 
 export const DeleteBrandDialog = ({ id, name }: BrandProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { fetchBrands } = useContext(BrandContext);
   const cancelRef = React.useRef<HTMLButtonElement>(null);
-  const { setBrandsList } = useBrandsList();
+
+  const handleDelete = async () => {
+    try {
+      await deleteBrand({ id, name });
+      fetchBrands();
+      onClose();
+    } catch (error) {
+      console.error("Error deleting brand: ", error);
+    }
+  };
 
   return (
-    <>
-      <Button
-        size={"xs"}
-        bg="#e00e0e"
-        color="#fff"
-        _hover={{ bg: "#b30000" }}
-        onClick={onOpen}
+    <React.Fragment>
+      <Tooltip
+        aria-label="Button tooltip."
+        bg={"#f64747"}
+        color={"#fff"}
+        hasArrow
+        label="Delete brand"
       >
-        Excluir
-      </Button>
+        <Button
+          color="#fff"
+          fontSize={"md"}
+          onClick={onOpen}
+          rightIcon={<CloseIcon />}
+          variant={"ghost"}
+          _active={{ color: "#f64747" }}
+          _hover={{ color: "#f64747" }}
+        ></Button>
+      </Tooltip>
       <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}
         onClose={() => onClose()}
       >
         <AlertDialogOverlay>
-          <AlertDialogContent bg="secondary.500">
+          <AlertDialogContent bg="secondary.700" borderRadius={"sm"}>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              <Text fontSize={"md"}>Excluir Montadora: </Text>
-              <Text fontSize={"2xl"}>{name}</Text>
+              <Text color={"brands.500"} fontSize={"md"}>
+                DELETE BRAND{" "}
+              </Text>
+              <Flex align={"center"} gap={4}>
+                <Image
+                  alt="brands logo"
+                  src={`/api/images?id=${id}&type=brands`}
+                  w={["75px"]}
+                />
+                <Flex color={"#aaaaaa"} flexDirection={"column"}>
+                  <Flex fontSize={name.length > 15 ? "xl" : "4xl"}>{name}</Flex>
+                  <Flex fontSize={"md"}>id: {id}</Flex>
+                </Flex>
+              </Flex>
             </AlertDialogHeader>
             <AlertDialogBody>
-              <Text fontSize={"md"}>Deseja mesmo excluir essa montadora?</Text>
-              <Text fontSize={"md"}>
-                Essa operação não poderá ser desfeita.
+              <Text color={"#aaaaaa"} fontSize={"md"} noOfLines={2}>
+                Do you really want to delete this brand? This operation CANNOT
+                be undone.
               </Text>
             </AlertDialogBody>
             <AlertDialogFooter>
               <Button
-                ref={cancelRef}
-                bg="#fff"
-                color="secondary.300"
-                _hover={{ bg: "secondary.100", color: "#fff" }}
+                bg="secondary.100"
+                color="#fff"
                 onClick={onClose}
+                ref={cancelRef}
+                _hover={{ bg: "#fff", color: "secondary.500" }}
               >
-                Cancelar
+                Cancel
               </Button>
               <Button
-                bg="#e00e0e"
+                bg="#f64747"
                 color="#fff"
-                _hover={{ bg: "#990000" }}
                 ml={3}
-                onClick={() => {
-                  deleteBrand({ id, name });
-                  onClose();
-
-                  console.log(id, name);
-                  setBrandsList((state) =>
-                    state.filter((item) => item.id === id)
-                  );
-                }}
+                onClick={handleDelete}
+                _hover={{ bg: "#b62e2e" }}
               >
-                Excluir
+                Delete
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-    </>
+    </React.Fragment>
   );
 };

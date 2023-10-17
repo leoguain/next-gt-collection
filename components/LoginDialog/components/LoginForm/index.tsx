@@ -66,8 +66,6 @@ export const LoginForm = () => {
           body: JSON.stringify(body),
         })
       );
-
-      console.log(mutateUser.arguments);
     } catch (error) {
       if (error instanceof FetchError) {
         setErrorMsg(error.data.message);

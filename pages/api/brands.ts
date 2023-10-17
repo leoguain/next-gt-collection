@@ -15,7 +15,7 @@ export default async function getBrands(
 
       res.status(201).json({ brands });
     } catch (error) {
-      res.status(201).json("No data found.");
+      res.status(401).json("No data found.");
       console.log(error);
     }
   } else if (req.method === "POST") {
@@ -33,6 +33,8 @@ export default async function getBrands(
           data: {
             id: req.body.id,
             name: req.body.name,
+            country: req.body.country,
+            logo: req.body.logo,
           },
           select: {
             id: true,
@@ -44,10 +46,10 @@ export default async function getBrands(
         res.status(201).json(newBrand);
       } else {
         prisma.$disconnect;
-        res.status(203).json("Esta montadora já foi cadastrada.");
+        res.status(203).json("This brand has already been registered.");
       }
     } catch (error) {
-      res.status(202).json("Nenhuma informação foi gravada no banco de dados.");
+      res.status(401).json("No information was written to the database.");
     }
   } else if (req.method === "PUT") {
     try {
@@ -59,6 +61,8 @@ export default async function getBrands(
         },
         data: {
           name: req.body.name,
+          country: req.body.country,
+          logo: req.body.logo,
         },
         select: {
           id: true,
@@ -70,7 +74,7 @@ export default async function getBrands(
 
       res.status(201).json(updateBrand);
     } catch (error) {
-      res.json("No data is updated");
+      res.status(401).json("No data is updated");
       console.log(error);
     }
   } else if (req.method === "DELETE") {
@@ -87,7 +91,7 @@ export default async function getBrands(
 
       res.status(201).json(deleteBrand);
     } catch (error) {
-      res.json("No data is deleted");
+      res.status(401).json("No data is deleted");
       console.log(error);
     }
   } else {

@@ -26,9 +26,11 @@ model Users {
 }
 
 model Brands {
-  id   String @id @default(cuid())
-  name String
-  Cars Cars[]
+  id      String @id @default(cuid())
+  name    String
+  country String @default("DE")
+  logo    String @default("")
+  Cars    Cars[]
 }
 
 model Cars {

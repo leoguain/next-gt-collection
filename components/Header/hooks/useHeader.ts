@@ -8,44 +8,54 @@ export const useHeader = () => {
   const menuItems = useMemo(
     () => [
       {
-        id: "Início",
+        id: "home",
+        title: "Home",
         href: "/",
         subItems: [],
       },
       {
-        id: "Cadastros",
+        id: "registrations",
+        title: "Registrations",
         href: "/cadastros",
         subItems: [
           {
-            id: "Montadoras",
-            href: "/montadoras",
-          },
-          {
-            id: "Carros",
-            href: "/carros",
-          },
-          {
-            id: "Pilotos",
+            id: "driversAI",
+            title: "AI Drivers",
             href: "/pilotos",
           },
           {
-            id: "Pistas",
+            id: "brands",
+            title: "Brands",
+            href: "/montadoras",
+          },
+          {
+            id: "cars",
+            title: "Cars",
+            href: "/carros",
+          },
+
+          {
+            id: "tracks",
+            title: "Tracks",
             href: "/pistas",
           },
         ],
       },
       {
-        id: "Campeonatos",
+        id: "championships",
+        title: "Championships",
         href: "/campeonatos",
         subItems: [],
       },
       {
-        id: "Minha Garagem",
+        id: "garage",
+        title: "My garage",
         href: "/garagem",
         subItems: [],
       },
       {
-        id: "Resultados",
+        id: "results",
+        title: "Results",
         href: "/resultados",
         subItems: [],
       },

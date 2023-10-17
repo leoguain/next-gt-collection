@@ -2,9 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import { Languages } from "../../../../constants";
-
-import { Flex, Select, Image, Button } from "@chakra-ui/react";
+import { Flex, Image, Button } from "@chakra-ui/react";
 
 import { LoginDialog } from "components/LoginDialog";
 import { RegisterDialog } from "components/RegisterDialog";
@@ -18,23 +16,18 @@ export const LoginBox = () => {
 
   return (
     <Flex align={"center"} gap={8}>
-      <LoginDialog />
-      <RegisterDialog />
-
-      {user?.isLoggedIn === false && (
+      {(user?.isLoggedIn === false || user === undefined) && (
         <Flex align={"center"}>
           <LoginDialog />
           <RegisterDialog />
         </Flex>
       )}
       {user?.isLoggedIn === true && (
-        <Flex>
+        <Flex align={"center"} color={"secondary.100"}>
           <li>
             <Link href="/profile-sg" legacyBehavior>
               <a>
-                <span>
-                  <Image src={user.avatarUrl} width={32} height={32} alt="" />
-                </span>
+                <span></span>
                 Profile (Static Generation, recommended)
               </a>
             </Link>
@@ -44,42 +37,43 @@ export const LoginBox = () => {
               <a>Profile (Server-side Rendering)</a>
             </Link>
           </li>
-          <li>
-            <Link href="/api/logout">
-              <Button
-                size={"xs"}
-                background={"secondary.800"}
-                color={"secondary.100"}
-                _hover={{ color: "#fff" }}
-                onClick={async (e) => {
-                  e.preventDefault();
-                  mutateUser(
-                    await fetchJson("/api/logout", { method: "POST" }),
-                    false
-                  );
-                  router.push("/");
-                }}
-              >
-                Logout
-              </Button>
-            </Link>
-          </li>
+          <Image
+            borderRadius={"100%"}
+            src={`/Users/${user.avatarUrl}.png`}
+            w={12}
+            h={12}
+            alt="User profile image."
+          />
+
+          <Button
+            size={"xs"}
+            background={"secondary.800"}
+            color={"secondary.100"}
+            _hover={{ color: "#fff" }}
+          >
+            Edit Profile
+          </Button>
+
+          <Link href="/api/logout">
+            <Button
+              size={"xs"}
+              background={"secondary.800"}
+              color={"secondary.100"}
+              _hover={{ color: "#fff" }}
+              onClick={async (e) => {
+                e.preventDefault();
+                mutateUser(
+                  await fetchJson("/api/logout", { method: "POST" }),
+                  false
+                );
+                router.push("/");
+              }}
+            >
+              Logout
+            </Button>
+          </Link>
         </Flex>
       )}
-
-      <Select
-        variant={"unstyled"}
-        color={"secondary.100"}
-        defaultValue={"pt-br"}
-        fontSize={"sm"}
-        size="xs"
-      >
-        {Languages.map(({ code, label }) => (
-          <option key={code} value={code}>
-            {label}
-          </option>
-        ))}
-      </Select>
     </Flex>
   );
 };

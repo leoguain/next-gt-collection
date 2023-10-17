@@ -3,12 +3,12 @@ import React from "react";
 import { FormLabel } from "@chakra-ui/react";
 
 interface TextProps {
-  text?: string;
+  text: string;
 }
 
 export const FieldLabel = ({ text }: TextProps) => {
   return (
-    <FormLabel mt={4} color={"gray.300"}>
+    <FormLabel color={"primary.500"} fontSize={"md"} mt={2}>
       {text}
     </FormLabel>
   );

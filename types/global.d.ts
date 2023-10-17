@@ -5,6 +5,8 @@ export type BrandsProps = {
 export type BrandProps = {
   id: string;
   name: string;
+  country: string;
+  logo: Buffer;
 };
 
 export type CarsProps = {
@@ -22,10 +24,24 @@ export type CarProps = {
   weight: number;
   aspiration: string;
 };
-export interface IFile {
-  url: string;
+
+export type TracksProps = {
+  tracks: TrackProps[];
+};
+
+export type TrackProps = {
+  id: string;
   name: string;
-}
+  shortName: string;
+  country: string;
+  extension: string;
+};
+
+export type ImageProps = {
+  buffer: ArrayBuffer;
+  type: string;
+  brandId: string;
+};
 
 export type LoginProps = {
   email: string;

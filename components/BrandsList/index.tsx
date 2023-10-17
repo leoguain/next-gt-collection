@@ -1,62 +1,63 @@
-import React, { useEffect, useState } from "react";
-
-import Axios from "axios";
-
-import { Flex, Text } from "@chakra-ui/react";
-
-import { EditBrandsBox } from "./components/EditBrandBox";
-import { AddBrandDrawer } from "./components/AddBrandDrawer";
-import { BrandProps } from "types/global";
-
-export const useBrandsList = () => {
-  const [brandsList, setBrandsList] = useState<BrandProps[]>([]);
-
-  return {
-    brandsList,
-    setBrandsList,
-  };
-};
+import React, { useContext, useEffect } from "react";
+import { Flex, Spinner } from "@chakra-ui/react";
+import { BrandBox } from "./components/EditBrandBox";
+import { AddEditDrawer } from "./components/AddEditDrawer";
+import { BrandContext } from "contexts/BrandsContext";
 
 export const BrandsList = () => {
-  const { brandsList, setBrandsList } = useBrandsList();
+  const { fetchBrands, brandsList, isLoading } = useContext(BrandContext);
 
   useEffect(() => {
-    const fetchBrands = async () => {
-      const res = await Axios.get("/api/brands");
-      setBrandsList(res.data.brands);
-      console.log("teste");
-    };
-
     fetchBrands();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <React.Fragment>
       <Flex
-        bg="secondary.500"
-        justifyContent={"space-between"}
         align={"center"}
+        bg="secondary.700"
+        borderBottom={"solid 1px"}
+        borderColor={"brands.500"}
+        color={"#aaaaaa"}
+        fontSize={["xl", "2xl", "4xl"]}
+        justifyContent={"space-between"}
+        mt={[2, 4]}
         p={4}
-        borderBottom={"solid 2px #313131"}
       >
-        <Text>Montadoras Cadastradas:</Text>
-        <AddBrandDrawer />
+        {`Brands List (${brandsList.length})`}
+        <AddEditDrawer />
       </Flex>
       <Flex
-        bg={"#474747"}
         alignSelf={"center"}
-        justifyContent="center"
-        gap={8}
         flexWrap="wrap"
+        gap={4}
+        justifyContent="center"
+        my={4}
         p={4}
       >
-        {brandsList
-          .sort((valueA: BrandProps, valueB: BrandProps) =>
-            valueA.name < valueB.name ? -1 : 1
-          )
-          .map((brand: { id: string; name: string }) => (
-            <EditBrandsBox key={brand.id} id={brand.id} name={brand.name} />
-          ))}
+        {isLoading ? (
+          <Spinner
+            alignSelf={"center"}
+            color="brands.800"
+            size="xl"
+            speed="0.65s"
+            thickness="4px"
+            my={20}
+          />
+        ) : (
+          brandsList
+            .sort((a, b) => (a.name < b.name ? -1 : 1))
+            .map((brand) => (
+              <BrandBox
+                key={brand.id}
+                id={brand.id}
+                name={brand.name}
+                country={brand.country}
+                logo={brand.logo}
+              />
+            ))
+        )}
       </Flex>
     </React.Fragment>
   );

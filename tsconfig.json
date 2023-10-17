@@ -23,7 +23,8 @@
       "@layouts/": ["layouts/"],
       "@lib/": ["lib/"],
       "@services/": ["services/"],
-      "@styles/": ["styles/"]
+      "@styles/": ["styles/"],
+      "@uploads/": ["uploads/*"]
     },
     "typeRoots": ["./types", "./node_modules/@types"]
   },

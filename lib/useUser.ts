@@ -7,7 +7,15 @@ export default function useUser({
   redirectTo = "",
   redirectIfFound = false,
 } = {}) {
-  const { data: user, mutate: mutateUser } = useSWR<User>("/api/user");
+  const options = {
+    /*
+    revalidateIfStale: false,
+    revalidateOnMount: false,
+    revalidateOnFocus: false,
+    */
+  };
+
+  const { data: user, mutate: mutateUser } = useSWR<User>("/api/user", options);
 
   useEffect(() => {
     // if no redirect needed, just return (example: already on /dashboard)

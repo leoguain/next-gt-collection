@@ -32,6 +32,9 @@ export default async function fetchJson<JSON = unknown>(
   input: RequestInfo,
   init?: RequestInit
 ): Promise<JSON> {
+  const options = {
+    revalidateOnFocus: false,
+  };
   const response = await fetch(input, init);
 
   // if the server replies, there's always some data in json
